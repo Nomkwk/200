@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>200 Days With You</title>
+  <style>
+    body {
+      background-color: #fdaae9;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+
+    .container, .collage {
+      display: none;
+      background-color: #ffffff;
+      padding: 100px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      gap: 40px;
+    }
+
+    .active {
+      display: flex;
+    }
+
+    .left img {
+      width: 200px;
+      border: 3px dashed #dca4f0;
+      border-radius: 16px;
+      padding: 10px;
+      background: rgb(255, 191, 228);
+    }
+
+    .right {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 15px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .keypad-btn {
+      width: 60px;
+      height: 60px;
+      font-size: 22px;
+      border-radius: 10px;
+      border: 2px solid #000000;
+      background-color: rgb(255, 206, 244);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .keypad-btn:hover {
+      background-color: #f4a5fd;
+    }
+
+    #codeDisplay {
+      grid-column: span 3;
+      height: 40px;
+      width: 200px;
+      font-size: 20px;
+      text-align: center;
+      
+      border: 2px solid #000000;
+      border-radius: 8px;
+      padding: 5px;
+      background: #fad2f1;
+    }
+
+    .collage {
+      flex-direction: column;
+      align-items: center;
+      background-color: #ffffff;
+    }
+
+    .collage h2 {
+      font-size: 28px;
+      background: #ffaefa;
+      padding: 10px 30px;
+      border-radius: 40px;
+      text-align: center;
+      color: #5c1a7d;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 15px;
+    }
+
+    .grid img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 4px solid white;
+      border-radius: 16px;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ea9dff;
+      border: none;
+      border-radius: 40px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background-color: #ff88eb;
+    }
+    #celebrationMessage {
+      display: none;
+      position: absolute;
+      top: 50px;
+      font-size: 40px;
+      color: #ff4081;
+      text-align: center;
+      width: 100%;
+      z-index: 10;
+      text-shadow: 2px 2px 10px white;
+}
+
+#fireworks-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.firework {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 75px;
+  color: #ff69b4;
+  transform: translate(-50%, -50%);
+  animation: heartExplode 4s ease-out forwards;
+}
+.hearts-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hearts-left {
+  left: 0;
+}
+
+.hearts-right {
+  right: 0;
+}
+
+.heart-fall {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #ff69b4;
+  animation: fall 20s linear infinite;
+  opacity: 0.7;
+  border-radius: 50%;
+  transform: rotate(45deg);
+  box-shadow:
+    0 -10px 0 0 #ff69b4,
+    -10px 0 0 0 #ff69b4;
+}
+
+@keyframes fall {
+  0% {
+    top: -30px;
+    opacity: 1;
+    transform: translateY(0) rotate(45deg);
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+    transform: translateY(100vh) rotate(90deg);
+  }
+}
+
+@keyframes heartExplode {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(2);
+  }
+}
+
+ @keyframes explode {
+      0% {
+       transform: scale(1);
+       opacity: 1;
+       box-shadow:
+       0 0 #ff0,
+       0 0 #f0f,
+       0 0 #0ff;
+    }
+      100% {
+       transform: scale(100);
+       opacity: 0;
+       box-shadow:
+       20px 20px #ff0,
+       -20px 20px #f0f,
+       20px -20px #0ff,
+       -20px -20px #ff69b4;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Falling Hearts on Left and Right -->
+<div class="hearts-container hearts-left" id="leftHearts"></div>
+<div class="hearts-container hearts-right" id="rightHearts"></div>
+  
+<audio id="bgm" loop autoplay>
+  <source src="bg.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+
+<!-- Page 1: Passcode -->
+<div class="container active" id="mainContainer">
+  <div class="left">
+    <img src="F3582D3B-EF94-4325-A088-2157E6836581_1_105_c.jpeg" alt="Us"> <!-- Replace this -->
+  </div>
+   <div class="right">
+   <div id="codeDisplay">Enter Code</div>
+   <p id="hint" style="grid-column: span 3; font-size: 11px; color: #ff0055; display: none; margin: 0;">Hint: Date we started dating (DDMMYY)</p>
+    <button class="keypad-btn" onclick="press(1)">1</button>
+    <button class="keypad-btn" onclick="press(2)">2</button>
+    <button class="keypad-btn" onclick="press(3)">3</button>
+    <button class="keypad-btn" onclick="press(4)">4</button>
+    <button class="keypad-btn" onclick="press(5)">5</button>
+    <button class="keypad-btn" onclick="press(6)">6</button>
+    <button class="keypad-btn" onclick="press(7)">7</button>
+    <button class="keypad-btn" onclick="press(8)">8</button>
+    <button class="keypad-btn" onclick="press(9)">9</button>
+    <button class="keypad-btn" onclick="press('.')">*</button>
+    <button class="keypad-btn" onclick="press(0)">0</button>
+    <button class="keypad-btn" onclick="submitCode()">#</button>
+  </div>
+</div>
+
+<!-- Page 2: Collage -->
+<div class="collage" id="collagePage">
+  <h1 id="celebrationMessage"> Happy 200 Day, LOVE 🩷</h1>
+
+<div id="fireworks-container">
+  <div class="firework"></div>
+  <div class="firework"></div>
+  <div class="firework"></div>
+</div>
+  <h2> Memories we spent TOGETHER </h2>
+  <div class="grid">
+  <img src="IMG_5193.jpeg" alt="Our first picture together" onclick="openModal(this)">
+  <img src="4E71CC82-CA95-4298-AC4D-9AB546FC48C7_1_105_c.jpeg" alt="You came for me without any reason🥺" onclick="openModal(this)">
+  <img src="69EE01F7-C65C-4404-A5E9-8A4B344F6418_1_105_c.jpeg" alt="Haan c yvjisn coffee shop orool bolzcihdog" onclick="openModal(this)">
+  <img src="62F0EB97-C7C3-4D7C-8E4C-B76F30D4B31A_1_105_c.jpeg" alt="Hamt hicheeldee yvna" onclick="openModal(this)">
+  <img src="9B61F0A2-4057-4014-8D18-6ABABC338958_1_105_c.jpeg" alt="Hamt jagsanaa kk" onclick="openModal(this)">
+  <img src="IMG_8193.jpeg" alt="Sciconii organizeruud ged bgamjin kk" onclick="openModal(this)">
+  <img src="IMG_9230.jpeg" alt="Hamt zuugalgand yvdag🥺. Mni hair nostoi mundag" onclick="openModal(this)">
+  <img src="792F39AF-2E4C-42BD-8773-7FE107D61D94_1_105_c.jpeg" alt="Hamt Hytad yvsan gel bod kk. Iim sonirholtoi amidralaar amidruulj baigaad bayrlalaa. " onclick="openModal(this)">
+  <img src="F50F02C2-7F9F-43F9-A0A2-8B2C9F751892_1_105_c.jpeg" alt="Hamt toglolt uzne" onclick="openModal(this)">
+  
+  <!-- Keep adding more -->
+</div>
+  <button class="back-btn" onclick="goBack()"> 🥹</button>
+</div>
+<!-- Modal Popup -->
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:20;">
+  <div style="background:white; padding:20px; border-radius:20px; max-width:90%; text-align:center; position:relative;">
+    <img id="modalImage" src="" alt="Preview" style="max-width:100%; max-height:70vh; border-radius:12px;" />
+    <p id="modalCaption" style="margin-top:10px; font-size:16px; color:#333;"></p>
+    <button onclick="closeModal()" style="margin-top:10px; padding:8px 16px; border:none; border-radius:20px; background:#ff69b4; color:white; cursor:pointer;">Close</button>
+  </div>
+</div>
+<script>
+  let inputCode = '';
+  const correctCode = '071224';
+
+  function press(num) {
+    if (inputCode.length < 6) {
+      inputCode += num;
+      document.getElementById('codeDisplay').textContent = inputCode;
+    }
+  }
+  if (inputCode === correctCode) {
+  document.getElementById('mainContainer').classList.remove('active');
+  document.getElementById('collagePage').classList.add('active');
+  document.getElementById('celebrationMessage').style.display = 'block';
+  document.getElementById('fireworks-container').style.display = 'block';
+  launchFireworks();
+}
+function playMusic() {
+  const music = document.getElementById("bgm");
+  music.play().catch(() => {
+    console.log("Autoplay blocked. Tap to play manually.");
+  });
+}
+
+function launchFireworks() {
+  const container = document.getElementById("fireworks-container");
+  for (let i = 0; i < 25; i++) {
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.textContent = "💖";
+
+    // Random angle and distance
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 400 + Math.random() * 100; // 100–200px
+
+    // Calculate x and y positions
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+
+    // Set direction using CSS custom properties
+    f.style.setProperty("--x", `${x}px`);
+    f.style.setProperty("--y", `${y}px`);
+
+    container.appendChild(f);
+    setTimeout(() => f.remove(), 2000);
+  }
+}
+function openModal(img) {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImage");
+  const caption = document.getElementById("modalCaption");
+
+  modalImg.src = img.src;
+  caption.textContent = img.alt;
+  modal.style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("imageModal").style.display = "none";
+}
+
+  function submitCode() {
+  if (inputCode === correctCode) {
+    document.getElementById('mainContainer').classList.remove('active');
+    document.getElementById('collagePage').classList.add('active');
+    document.getElementById('celebrationMessage').style.display = 'block';
+    document.getElementById('fireworks-container').style.display = 'block';
+    launchFireworks();
+    playMusic(); // 🔊 Start background music here
+    createRainingHearts();
+  } else {
+    document.getElementById('codeDisplay').textContent = 'Try Again Babe 🥹';
+    document.getElementById('hint').style.display = 'block';
+    inputCode = '';
+  }
+}
+function createRainingHearts() {
+  const left = document.getElementById('leftHearts');
+  const right = document.getElementById('rightHearts');
+
+  setInterval(() => {
+    const heartL = document.createElement('div');
+    heartL.classList.add('heart-fall');
+    heartL.style.left = Math.random() * 80 + 'px';
+    heartL.style.animationDuration = (3 + Math.random() * 2) + 's';
+    left.appendChild(heartL);
+    setTimeout(() => heartL.remove(), 6000);
+
+    const heartR = document.createElement('div');
+    heartR.classList.add('heart-fall');
+    heartR.style.left = Math.random() * 80 + 'px';
+    heartR.style.animationDuration = (3 + Math.random() * 2) + 's';
+    right.appendChild(heartR);
+    setTimeout(() => heartR.remove(), 6000);
+  }, 300);
+}
+
+  function goBack() {
+    inputCode = '';
+    document.getElementById('collagePage').classList.remove('active');
+    document.getElementById('mainContainer').classList.add('active');
+    document.getElementById('codeDisplay').textContent = 'Enter Code';
+    document.getElementById('hint').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
