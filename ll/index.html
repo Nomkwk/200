@@ -300,13 +300,7 @@
       document.getElementById('codeDisplay').textContent = inputCode;
     }
   }
-  if (inputCode === correctCode) {
-  document.getElementById('mainContainer').classList.remove('active');
-  document.getElementById('collagePage').classList.add('active');
-  document.getElementById('celebrationMessage').style.display = 'block';
-  document.getElementById('fireworks-container').style.display = 'block';
-  launchFireworks();
-}
+
 function playMusic() {
   const music = document.getElementById("bgm");
   music.play().catch(() => {
